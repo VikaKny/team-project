@@ -1,4 +1,4 @@
-contacts = []
+contacts = {}
 
 while True:
     print("\n1 - Додати контакт")
@@ -6,57 +6,56 @@ while True:
     print("3 - Видалити контакт")
     print("4 - Вихід")
 
-    choice = input("Виберіть дію: ")
-
+    choice = input("Виберіть дію: ").strip()
 
     if choice == "1":
-        name = input("Введіть ПІБ: ")
-        number = input("Введіть номер телефону: ")
+        name = input("Введіть ПІБ: ").strip()
+        number = input("Введіть номер телефону: ").strip()
 
-        contact = {
-            "name": name,
-            "phone": number
-        }
+        if name == "" or number == "":
+            print("Поля не можуть бути порожніми!")
+            continue
 
-        contacts.append(contact)
+        contacts[name] = number
         print("Контакт додано")
-
 
     elif choice == "2":
         print("\nСписок контактів:")
 
-        if len(contacts) == 0:
+        if not contacts:
             print("Контактів немає")
         else:
-            for i, c in enumerate(contacts, 1):
-                print(f"{i} - {c['name']} : {c['phone']}")
-
+            i = 1
+            for name, phone in contacts.items():
+                print(f"{i}. {name} : {phone}")
+                i += 1
 
     elif choice == "3":
-        if len(contacts) == 0:
+        if not contacts:
             print("Немає що видаляти")
         else:
             print("\nСписок контактів:")
-            for i, c in enumerate(contacts, 1):
-                print(f"{i} - {c['name']} : {c['phone']}")
+            names = list(contacts.keys())
+
+            for i, name in enumerate(names, 1):
+                print(f"{i}. {name} : {contacts[name]}")
 
             try:
                 index = int(input("Введіть номер контакту для видалення: ")) - 1
 
-                if 0 <= index < len(contacts):
-                    deleted = contacts.pop(index)
-                    print(f"Видалено: {deleted['name']}")
+                if 0 <= index < len(names):
+                    deleted_name = names[index]
+                    del contacts[deleted_name]
+                    print(f"Видалено: {deleted_name}")
                 else:
                     print("Невірний номер")
 
             except ValueError:
                 print("Введіть число!")
 
-
     elif choice == "4":
         print("Програма завершена")
         break
-
 
     else:
         print("Невірний вибір")
